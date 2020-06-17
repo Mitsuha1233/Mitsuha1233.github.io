@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="/"/>
-  <updated>2020-06-16T13:05:07.199Z</updated>
+  <updated>2020-04-15T09:15:40.185Z</updated>
   <id>/</id>
   
   <author>
@@ -15,28 +15,6 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title></title>
-    <link href="/2020/06/16/8BBC%E8%BF%9E%E6%8E%A5/"/>
-    <id>/2020/06/16/8BBC连接/</id>
-    <published>2020-06-16T12:18:50.879Z</published>
-    <updated>2020-06-16T13:05:07.199Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;\assets\css\APlayer.min.css&quot;&gt;&lt;script src=&quot;\assets\js\APlayer.min.js&quot;
-        
-      
-    
-    </summary>
-    
-    
-  </entry>
   
   <entry>
     <title>朝暮 认真的学会儿习</title>
@@ -62,10 +40,10 @@
   
   <entry>
     <title>连接BBC</title>
-    <link href="/2020/04/10/7%E8%AF%84%E8%AE%BA%E7%B3%BB%E7%BB%9F/"/>
-    <id>/2020/04/10/7评论系统/</id>
+    <link href="/2020/04/10/7BBC%E8%93%9D%E7%89%99%E8%BF%9E%E6%8E%A5/"/>
+    <id>/2020/04/10/7BBC蓝牙连接/</id>
     <published>2020-04-10T03:49:27.000Z</published>
-    <updated>2020-06-16T13:06:31.405Z</updated>
+    <updated>2020-06-17T00:28:50.363Z</updated>
     
     <summary type="html">
     
