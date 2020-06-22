@@ -1,0 +1,578 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn" class="loading">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>任意控制LED行列 - Mitsuha</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="好少年光芒万丈,代码如下：&amp;lt;html&amp;gt;
+    &amp;lt;head&amp;gt;
+        &amp;lt;script&amp;gt;
+        var    selected_device; //选择设备
+  ,"> 
+    <meta name="author" content="Mitsuha"> 
+    <link rel="alternative" href="atom.xml" title="Mitsuha" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="/css/diaspora.css">
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+</head>
+</html>
+<body class="loading">
+    <span id="config-title" style="display:none">Mitsuha</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url=""></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">任意控制LED行列</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">任意控制LED行列</h1>
+        <div class="stuff">
+            <span>六月 22, 2020</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h2 id="代码如下："><a href="#代码如下：" class="headerlink" title="代码如下："></a>代码如下：</h2><pre><code>&lt;html&gt;
+    &lt;head&gt;
+        &lt;script&gt;
+        var    selected_device; //选择设备
+        var    connected_server; //连接设备
+        var    connected=false;//连接状态
+        var    services_discovered=false;//发现设备状态
+        // 添加服务和特性状态变量 
+        var has_accelerometer_service = false; //加速度服务状态
+        var has_accelerometer_data = false; //加速度特性状态
+        var has_led_service = false;//led服务状态
+        var has_led_matrix_state = false; //led控制特性状态
+        var has_device_information_service = false; //设备信息服务状态
+        var has_model_name_string = false; //设备信息特性状态
+        var has_temperature_service =false;    //温度服务状态
+        var has_tem_temperature = false;  //温度特性状态
+         // 服务 UUIDs 
+       ACCELEROMETER_SERVICE = &#39;e95d0753-251d-470a-a062-fa1922dfa9a8&#39;; 
+       LED_SERVICE = &#39;e95dd91d-251d-470a-a062-fa1922dfa9a8&#39;; 
+       DEVICE_INFORMATION_SERVICE = &#39;0000180a-0000-1000-8000-00805f9b34fb&#39;;
+       TEMPERATURE_SERVICE = &#39;e95d6100-251d-470a-a062-fa1922dfa9a8&#39;; 
+       // 特性 UUIDs 
+       ACCELEROMETER_DATA = &#39;e95dca4b-251d-470a-a062-fa1922dfa9a8&#39;; 
+       LED_MATRIX_STATE  = &#39;e95d7b77-251d-470a-a062-fa1922dfa9a8&#39;; 
+       MODEL_NUMBER_STRING = &#39;00002a24-0000-1000-8000-00805f9b34fb&#39;;
+       TEM_TEMPERATURE = &#39;e95d1b25-251d-470a-a062-fa1922dfa9a8&#39;;  
+       // 添加特性变量 
+       var led_matrix_state; 
+        var model_number_string;
+        var accelerometer_data;
+        var tem_temperature;    
+          //添加服务，特性相关参数
+        var service_count;
+         var services_discovered;
+         var characteristics_discovered;  
+         var characteristic_count ;               
+         function discoverOrdisconnectDevices()// 断开连接
+        {
+            console.log(&quot;discoverOrdisconnectDevices&quot;);
+            if(!connected)
+            discoverDevices();
+            else
+            {
+                selected_device.gatt.disconnect();
+            }
+        }
+
+        function onDisconnected()//连接
+        {
+            console.log(&quot;onDisconnected&quot;);
+            resetUI();
+        }
+        //function input.temperature(): number;
+        function discoverDevices()// 搜索设备函数
+        { 
+            console.log(&quot;discoverDevices&quot;);
+            var options = {acceptAllDevices:true,
+                optionalServices: [DEVICE_INFORMATION_SERVICE, ACCELEROMETER_SERVICE, LED_SERVICE,TEMPERATURE_SERVICE]  //在第5节课上添加
+            }        //发现所有周边蓝牙设备
+
+            navigator.bluetooth.requestDevice(options)
+            .then(device =&gt; {
+                console.log(&#39;&gt; Name:&#39; + device.name);
+                console.log(&#39;&gt; Id:&#39; + device.id);
+                console.log(&#39;&gt; Connected:&#39; + device.gatt.connected);
+                selected_device = device;
+                console.log(selected_device);
+                connect();
+                })
+            .catch(error =&gt; {
+                alert(&#39;ERROR&#39; +error);
+                console.log(&#39;ERROR&#39; +error);
+                });       
+        }       
+        function connect()    //连接函数
+        {
+            console.log(&quot;connecting&quot;);
+            selected_device.gatt.connect()
+            .then(
+                function (server)
+                {
+                    console.log(&quot;Connected to&quot; + server.device.id);
+                    console.log(&quot;Connected &quot; + server.connected);
+                    selected_device.addEventListener(&#39;gattserverdisconnected&#39;,onDisconnected);
+                    connected_server =server;
+                    discoverSvcsAndChars(); //在第5课基础上添加的函数
+                    setConnectedStatus(true);
+                },
+                function (error)
+                {
+                    console.log(&quot;ERROR:could not connct-&quot; + error);
+                   alert(&quot;ERROR:could not connct-&quot; + error);
+                   setConnectedStatus(false);
+                }
+            );
+        }
+        function setConnectedStatus(status)//设置连接状态
+        {
+            connected=status;
+            document.getElementById(&#39;status_connected&#39;).innerHTML = status;
+            if(status==true)
+            {
+                document.getElementById(&#39;btn_scan&#39;).innerHTML = &quot;Disconnect&quot;;
+            }
+            else
+            {
+                document.getElementById(&#39;btn_scan&#39;).innerHTML = &quot;Discover Devices&quot;;
+            }
+        }
+        function setDiscoveryStatus(status)//设置发现状态
+        {
+            services_discovered=status;
+            document.getElementById(&#39;status_discovered&#39;).innerHTML=status;
+        }
+
+        function resetUI()    //重置页面
+        {
+            setConnectedStatus(false);
+        }
+
+        function discoverSvcsAndChars()    //发现服务和特性
+        {  
+            console.log(&quot;discoverSvcsAndChars server=&quot; + connected_server); 
+            connected_server.getPrimaryServices()
+            .then(services =&gt; 
+            {    
+                    has_accelerometer_service = false;    
+                    has_led_service = false;    
+                    has_device_information_service = false; 
+                    has_temperature_service= false;
+
+                    services_discovered = 0;    
+                    service_count = services.length;    
+                    console.log(&quot;Got &quot; + service_count + &quot; services&quot;); 
+
+                    services.forEach(service =&gt; 
+                    {     
+                        if (service.uuid == ACCELEROMETER_SERVICE)
+                        {      
+                            has_accelerometer_service = true;    
+                        }   
+                        if (service.uuid == LED_SERVICE) 
+                        {      
+                            has_led_service = true;     
+                        }     
+                       if (service.uuid == DEVICE_INFORMATION_SERVICE) 
+                        {      
+                            has_device_information_service = true;     
+                        } 
+                        if (service.uuid == TEMPERATURE_SERVICE) //温度
+                        {      
+                            has_temperature_service = true;     
+                        }        
+                        console.log(&#39;Getting Characteristics for service &#39; + service.uuid);     
+                        service.getCharacteristics()
+                        .then(characteristics =&gt; 
+                        {      
+                            console.log(&#39;&gt; Service: &#39; + service.uuid);      
+                            services_discovered++;     
+                            characteristics_discovered = 0;      
+                            characteristic_count = characteristics.length;      
+                            characteristics.forEach(characteristic =&gt; 
+                            {       
+                                characteristics_discovered++;       
+                                console.log(&#39;&gt;&gt; Characteristic: &#39; + characteristic.uuid);       
+                                if (characteristic.uuid == ACCELEROMETER_DATA)
+                                {        
+                                    accelerometer_data = characteristic;        
+                                    has_accelerometer_data = true;       
+                                }      
+                                if (characteristic.uuid == LED_MATRIX_STATE) 
+                                {        
+                                    led_matrix_state = characteristic;        
+                                    has_led_matrix_state = true;       
+                                }       
+                                if (characteristic.uuid == MODEL_NUMBER_STRING) 
+                                {        
+                                    model_number_string = characteristic;        
+                                    has_model_name_string = true;       
+                                }
+                                if(characteristic.uuid == TEM_TEMPERATURE)  //温度
+                                {
+                                    tem_temperature = characteristic; 
+                                    has_tem_temperature = true;
+                                }     
+                                if (services_discovered == service_count &amp;&amp; characteristics_discovered == characteristic_count) 
+                                {        
+                                    console.log(&quot;FINISHED DISCOVERY&quot;); 
+                                    setDiscoveryStatus(true);       
+                                    //setDiscoveryStatus(true);                  
+                                }    
+                            });     
+                        });    
+                    });  
+            });
+        }  
+        var i=0,j=0;
+        function randomLEDs(ct)   //控制led
+        {  
+            console.log(&quot;randomLEDs&quot;);   
+            // state validation   
+            if (!connected) 
+            {     
+                alert(&quot;Error: Discover and connect to a device before using this function&quot;);     
+                return;   
+            }   
+            if (!services_discovered) 
+            {     
+                alert(&quot;Error: Service discovery has not yet completed&quot;);     
+                return;  
+            }   
+            if (!has_led_service) 
+            {     
+                alert(&quot;Error: The connected device does not contain the LED service&quot;);     
+                return;  
+            }   
+            if (!has_led_matrix_state) 
+            {      
+                alert(&quot;Error: The connected device does not contain the LED matrix state characteristic&quot;);      
+                return;   
+            }   
+            var led_array=[];
+            if(ct==0)
+            {
+                 led_array[0] =    1&lt;&lt;i;
+                 led_array[1] = 1&lt;&lt;i;   
+                 led_array[2] = 1&lt;&lt;i;   
+                 led_array[3] = 1&lt;&lt;i;   
+                 led_array[4] = 1&lt;&lt;i;
+                 i++;
+                 if(i==5)i=0;
+            }
+            else if(ct==1)
+            {
+                led_array[0] = 0;
+                led_array[1] = 0;   
+                led_array[2] = 0;   
+                led_array[3] = 0;   
+                led_array[4] = 0;
+                led_array[j] = 31;
+                j++;
+                if(j==5)j=0;
+            }
+
+
+             // Math.random():0~1  Math.floor(x):返回小于等于x的最大整数
+            /*led_array[0] =10;  
+            led_array[1] = 31;   
+            led_array[2] = 31;   
+            led_array[3] = 14;   
+            led_array[4] = 4;*/
+            /*led_array[0] = 31;  
+            led_array[1] = 17;   
+            led_array[2] = 17;   
+            led_array[3] = 17;   
+            led_array[4] = 31; */
+
+            var led_matrix_data = new Uint8Array(led_array); 
+
+            led_matrix_state.writeValue(led_matrix_data.buffer)
+            .then(_ =&gt; {   
+                console.log(&#39;LED matrix state changed&#39;);  
+                })  
+            .catch(error =&gt; {   
+                console.log(&#39;Error: &#39; + error);   
+                alert(&#39;Error: &#39; + error);   return;  
+                }); 
+        }  
+        function readModelNumber()  // 蓝牙信息服务
+        {  
+            console.log(&quot;readModelNumber&quot;);   
+            // state validation   
+            if (!connected) 
+            {     
+                alert(&quot;Error: Discover and connect to a device before using this function&quot;);     
+                return;   
+            }   
+            if (!services_discovered) 
+            {     
+                alert(&quot;Error: Service discovery has not yet completed&quot;);     
+                return;   
+            }    
+            if (!has_device_information_service) 
+            {     
+                alert(&quot;Error: The connected device does not contain the device information service&quot;);     
+                return;   
+            }   
+            if (!has_model_name_string) 
+            {     
+                alert(&quot;Error: The connected device does not contain the model name string characteristic&quot;);     
+                return;   
+            }   
+
+            model_number_string.readValue()
+            .then(value =&gt; {   
+                data = new Uint8Array(value.buffer);   
+                model_number_string = new TextDecoder(&quot;utf-8&quot;).decode(data);  
+                console.log(model_number_string);   
+                document.getElementById(&quot;model_number&quot;).innerHTML = model_number_string;  
+                })  
+            .catch(error =&gt; {  
+                console.log(&#39;Error: &#39; + error);   
+                alert(&#39;Error: &#39; + error);   
+                return;  
+                }); 
+            }
+
+                  function accelerometer()   //加速度传感器
+                 {  
+                     console.log(&quot;accelerometer&quot;);   
+                     // state validation   
+                     if (!connected) 
+                     {     
+                         alert(&quot;Error: Discover and connect to a device before using this function&quot;);     
+                         return;   
+                     }   
+                     if (!services_discovered) 
+                     {     
+                         alert(&quot;Error: Service discovery has not yet completed&quot;);     
+                         return;  
+                     }   
+                     if (!has_accelerometer_service) 
+                     {     
+                         alert(&quot;Error: The connected device does not contain the accelerometer service&quot;);     
+                         return;  
+                     }   
+                     if (!has_accelerometer_data) 
+                     {      
+                         alert(&quot;Error: The connected device does not contain the accelerometer_data characteristic&quot;);      
+                         return;   
+                     }   
+
+                     accelerometer_data.readValue()
+                    .then(value =&gt; {
+                      buffer = value.buffer;
+                      dataview = new DataView(buffer);
+                      X = dataview.getUint16(0, true);
+                      Y = dataview.getUint16(2, true);
+                      Z = dataview.getUint16(4, true);
+                      console.log(&quot;X=&quot; + X + &quot;, Y=&quot; + Y + &quot;, Z+&quot; + Z);
+                      document.getElementById(&quot;ac_data&quot;).innerHTML = &quot;X=&quot; + X + &quot;, Y=&quot; + Y + &quot;,Z=&quot; + Z;
+                        })  
+                    .catch(error =&gt; {  
+                        console.log(&#39;Error: &#39; + error);   
+                        alert(&#39;Error: &#39; + error);   
+                        return;  
+                        }); 
+
+
+                 }  
+
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h2&gt;  Status
+        &lt;/h2&gt;
+            &lt;table border=&quot;1&quot;&gt;
+                &lt;tr&gt;
+                    &lt;td&gt;     &lt;b&gt;Connected&lt;/b&gt;   &lt;/td&gt;
+                    &lt;td&gt;     &lt;b&gt;Service Discovery Completed&lt;/b&gt;   &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                    &lt;td id=&quot;status_connected&quot;&gt; false &lt;/td&gt;
+                    &lt;td id=&quot;status_discovered&quot;&gt; false &lt;/td&gt;
+                &lt;/tr&gt;
+            &lt;/table&gt;
+            &lt;hr&gt;
+        &lt;h2&gt;
+            Device Discovery or Disconnect
+        &lt;/h2&gt;
+        &lt;button id = &quot;btn_scan&quot; onclick=&quot;discoverOrdisconnectDevices()&quot;&gt;Start scan&lt;/button&gt;
+        &lt;hr&gt;
+        &lt;h2&gt;Reading and Writing&lt;/h2&gt;
+        &lt;h3&gt;Write Characteristic - Randomise Lights&lt;/h3&gt;  
+        &lt;button id=&quot;btn_write&quot; onclick=&quot;randomLEDs(0)&quot;&gt;控制led行&lt;/button&gt;
+        &lt;button id=&quot;btu_write&quot; onclick=&quot;randomLEDs(1)&quot;&gt;控制led列&lt;/button&gt;
+        &lt;h3&gt;Read Characteristic - Model number&lt;/h3&gt;  
+        &lt;button id=&quot;btn_read&quot; onclick=&quot;readModelNumber()&quot;&gt;Read Model number&lt;/button&gt; 
+        &lt;div id=&quot;model_number&quot;&gt;&lt;/div&gt;
+        &lt;h3&gt;accelerometer_data&lt;/h3&gt;
+        &lt;button id=&quot;btn_readAC&quot; onclick=&quot;accelerometer()&quot;&gt;Read accelerometer_data&lt;/button&gt; 
+        &lt;div id=&quot;ac_data&quot;&gt;&lt;/div&gt;
+        &lt;hr&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><h2 id="需要用到如下函数"><a href="#需要用到如下函数" class="headerlink" title="需要用到如下函数"></a>需要用到如下函数</h2><ul>
+<li><p><code>microbit.display.`</code>on`()</p>
+<p>调用on()以开启显示。</p>
+</li>
+<li><p><code>microbit.display.`</code>off`()</p>
+<p>调用off()以关闭显示（从而允许您将与显示相关的GPIO引脚重新用于其他目的）。</p>
+</li>
+<li><p><code>microbit.display.`</code>is_on`()</p>
+<p>若显示处于开启状态，则返回 <code>True</code>，否则返回 <code>False</code>。</p>
+</li>
+</ul>
+<h2 id="网页显示"><a href="#网页显示" class="headerlink" title="网页显示"></a>网页显示</h2><p><img src="https://cdn.jsdelivr.net/gh/Mitsuha1233/cdn@8.0/Pixv/LED2.png" alt="YK11"></p>
+<h2 id="控制效果如下"><a href="#控制效果如下" class="headerlink" title="控制效果如下"></a>控制效果如下<img src="https://cdn.jsdelivr.net/gh/Mitsuha1233/cdn@8.0/Pixv/LED3.JPG" alt="YK11"></h2><p><img src="https://cdn.jsdelivr.net/gh/Mitsuha1233/cdn@8.0/Pixv/LED5.JPG" alt="YK11"><img src="https://cdn.jsdelivr.net/gh/Mitsuha1233/cdn@8.0/Pixv/LED4.JPG" alt="YK11"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Mitsuha1233/cdn@8.0/Pixv/LED10.JPG" alt="YK11"><img src="https://cdn.jsdelivr.net/gh/Mitsuha1233/cdn@8.0/Pixv/LED8.JPG" alt="YK11"></p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/1409249540.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/1350336761.mp3'></li>
+                        
+                    
+                        
+                            <li title='2' data-url='http://link.hhtjim.com/163/545825923.mp3'></li>
+                        
+                    
+                        
+                            <li title='3' data-url='http://link.hhtjim.com/163/539619640.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='false'
+        data-ci='c3450cd920580cc7819f'
+        data-cs='111992513f76f2b4471875b1d04d919f59be5009'
+        data-r='https://mitsuha1233.github.io/'
+        data-o='Mitsuha1233'
+        data-a='Mitsuha1233'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#代码如下："><span class="toc-number">1.</span> <span class="toc-text">代码如下：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#需要用到如下函数"><span class="toc-number">2.</span> <span class="toc-text">需要用到如下函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#网页显示"><span class="toc-number">3.</span> <span class="toc-text">网页显示</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#控制效果如下"><span class="toc-number">4.</span> <span class="toc-text">控制效果如下</span></a></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

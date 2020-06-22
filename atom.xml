@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="/"/>
-  <updated>2020-06-21T12:43:29.180Z</updated>
+  <updated>2020-06-22T14:56:22.809Z</updated>
   <id>/</id>
   
   <author>
@@ -15,6 +15,50 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>任意控制LED行列</title>
+    <link href="/2020/06/22/12LED/"/>
+    <id>/2020/06/22/12LED/</id>
+    <published>2020-06-22T04:49:27.000Z</published>
+    <updated>2020-06-22T14:56:22.809Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;\assets\css\APlayer.min.css&quot;&gt;&lt;script src=&quot;\assets\js\APlayer.min.js&quot;
+        
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>加速度值显示</title>
+    <link href="/2020/06/22/11%E5%8A%A0%E9%80%9F%E5%BA%A6%E5%99%A8%E5%80%BC%E6%98%BE%E7%A4%BA/"/>
+    <id>/2020/06/22/11加速度器值显示/</id>
+    <published>2020-06-22T03:49:27.000Z</published>
+    <updated>2020-06-22T14:56:10.194Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;\assets\css\APlayer.min.css&quot;&gt;&lt;script src=&quot;\assets\js\APlayer.min.js&quot;
+        
+      
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>读写特性</title>
