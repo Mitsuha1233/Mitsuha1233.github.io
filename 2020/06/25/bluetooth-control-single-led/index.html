@@ -1,0 +1,366 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn" class="loading">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>裴超凡--任意LED灯控制 - Mitsuha</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="好少年光芒万丈,定义变量var c = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+UI界面设计&amp;,"> 
+    <meta name="author" content="Mitsuha"> 
+    <link rel="alternative" href="atom.xml" title="Mitsuha" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="/css/diaspora.css">
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+</head>
+</html>
+<body class="loading">
+    <span id="config-title" style="display:none">Mitsuha</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url=""></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">裴超凡--任意LED灯控制</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">裴超凡--任意LED灯控制</h1>
+        <div class="stuff">
+            <span>六月 25, 2020</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h2 id="定义变量"><a href="#定义变量" class="headerlink" title="定义变量"></a>定义变量</h2><pre><code class="javascript">var c = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+</code></pre>
+<h2 id="UI界面设计"><a href="#UI界面设计" class="headerlink" title="UI界面设计"></a>UI界面设计</h2><pre><code class="html">&lt;h3&gt; 控制单个小灯暗亮 &lt;/h3&gt;
+    &lt;button id = &quot;led00&quot; onclick = &quot;led00()&quot;&gt;&lt;/button&gt;
+    &lt;button id = &quot;led01&quot; onclick = &quot;led01()&quot;&gt;&lt;/button&gt;
+    &lt;button id = &quot;led02&quot; onclick = &quot;led02()&quot;&gt;&lt;/button&gt;
+    &lt;button id = &quot;led03&quot; onclick = &quot;led03()&quot;&gt;&lt;/button&gt;
+    &lt;button id = &quot;led04&quot; onclick = &quot;led04()&quot;&gt;&lt;/button&gt;
+    &lt;br&gt;
+    &lt;button id = &quot;led10&quot; onclick = &quot;led10()&quot;&gt;&lt;/button&gt;
+    &lt;button id = &quot;led11&quot; onclick = &quot;led11()&quot;&gt;&lt;/button&gt;
+    &lt;button id = &quot;led12&quot; onclick = &quot;led12()&quot;&gt;&lt;/button&gt;
+    &lt;button id = &quot;led13&quot; onclick = &quot;led13()&quot;&gt;&lt;/button&gt;
+    &lt;button id = &quot;led14&quot; onclick = &quot;led14()&quot;&gt;&lt;/button&gt;
+    &lt;br&gt;
+    &lt;button id = &quot;led20&quot; onclick = &quot;led20()&quot;&gt;&lt;/button&gt;
+    &lt;button id = &quot;led21&quot; onclick = &quot;led21()&quot;&gt;&lt;/button&gt;
+    &lt;button id = &quot;led22&quot; onclick = &quot;led22()&quot;&gt;&lt;/button&gt;
+    &lt;button id = &quot;led23&quot; onclick = &quot;led23()&quot;&gt;&lt;/button&gt;
+    &lt;button id = &quot;led24&quot; onclick = &quot;led24()&quot;&gt;&lt;/button&gt;
+    &lt;br&gt;
+    &lt;button id = &quot;led30&quot; onclick = &quot;led30()&quot;&gt;&lt;/button&gt;
+    &lt;button id = &quot;led31&quot; onclick = &quot;led31()&quot;&gt;&lt;/button&gt;
+    &lt;button id = &quot;led32&quot; onclick = &quot;led32()&quot;&gt;&lt;/button&gt;
+    &lt;button id = &quot;led33&quot; onclick = &quot;led33()&quot;&gt;&lt;/button&gt;
+    &lt;button id = &quot;led34&quot; onclick = &quot;led34()&quot;&gt;&lt;/button&gt;
+    &lt;br&gt;
+    &lt;button id = &quot;led40&quot; onclick = &quot;led40()&quot;&gt;&lt;/button&gt;
+    &lt;button id = &quot;led41&quot; onclick = &quot;led41()&quot;&gt;&lt;/button&gt;
+    &lt;button id = &quot;led42&quot; onclick = &quot;led42()&quot;&gt;&lt;/button&gt;
+    &lt;button id = &quot;led43&quot; onclick = &quot;led43()&quot;&gt;&lt;/button&gt;
+    &lt;button id = &quot;led44&quot; onclick = &quot;led44()&quot;&gt;&lt;/button&gt;
+</code></pre>
+<p>功能实现</p>
+<pre><code class="javascript">function led00()
+{
+    if(c[0] == 0)
+    {
+        led[0] = led[0] | (1 &lt;&lt; 4);
+        c[0] = 1;
+    }
+    else
+    {
+        led[0] = led[0]&amp;(~(1&lt;&lt;4));
+        c[0] = 0;
+    }
+    randLED();
+}
+function led01()
+{
+    if(c[1] == 0)
+    {
+        led[0] = led[0] | (1 &lt;&lt; 4);
+        c[1] = 1;
+    }
+    else
+    {
+        led[0] = led[0]&amp;(~(1&lt;&lt;4));
+        c[1] = 0;
+    }
+    randLED();
+}
+function led02()
+{
+    if(c[2] == 0)
+    {
+        led[0] = led[0] | (1 &lt;&lt; 4);
+        c[2] = 1;
+    }
+    else
+    {
+        led[0] = led[0]&amp;(~(1&lt;&lt;4));
+        c[2] = 0;
+    }
+    randLED();
+}
+function led03()
+{
+    if(c[3] == 0)
+    {
+        led[0] = led[0] | (1 &lt;&lt; 4);
+        c[3] = 1;
+    }
+    else
+    {
+        led[0] = led[0]&amp;(~(1&lt;&lt;4));
+        c[3] = 0;
+    }
+    randLED();
+}
+function led04()
+{
+    if(c[4] == 0)
+    {
+        led[0] = led[0] | (1 &lt;&lt; 4);
+        c[4] = 1;
+    }
+    else
+    {
+        led[0] = led[0]&amp;(~(1&lt;&lt;4));
+        c[4] = 0;
+    }
+    randLED();
+}
+function led10()
+{
+    if(c[5] == 0)
+    {
+        led[1] = led[1] | (1 &lt;&lt; 4);
+        c[5] = 1;
+    }
+    else
+    {
+        led[1] = led[1]&amp;(~(1&lt;&lt;4));
+        c[5] = 0;
+    }
+    randLED();
+}
+function led11()
+{
+    if(c[6] == 0)
+    {
+        led[1] = led[1] | (1 &lt;&lt; 4);
+        c[6] = 1;
+    }
+    else
+    {
+        led[1] = led[1]&amp;(~(1&lt;&lt;4));
+        c[6] = 0;
+    }
+    randLED();
+}
+function led11()
+{
+    if(c[6] == 0)
+    {
+        led[1] = led[1] | (1 &lt;&lt; 4);
+        c[6] = 1;
+    }
+    else
+    {
+        led[1] = led[1]&amp;(~(1&lt;&lt;4));
+        c[6] = 0;
+    }
+    randLED();
+}
+function led12()
+{
+    if(c[7] == 0)
+    {
+        led[1] = led[1] | (1 &lt;&lt; 4);
+        c[7] = 1;
+    }
+    else
+    {
+        led[1] = led[1]&amp;(~(1&lt;&lt;4));
+        c[7] = 0;
+    }
+    randLED();
+}
+function led13()
+{
+    if(c[8] == 0)
+    {
+        led[1] = led[1] | (1 &lt;&lt; 4);
+        c[8] = 1;
+    }
+    else
+    {
+        led[1] = led[1]&amp;(~(1&lt;&lt;4));
+        c[8] = 0;
+    }
+    randLED();
+}
+function led14()
+{
+    if(c[9] == 0)
+    {
+        led[1] = led[1] | (1 &lt;&lt; 4);
+        c[9] = 1;
+    }
+    else
+    {
+        led[1] = led[1]&amp;(~(1&lt;&lt;4));
+        c[9] = 0;
+    }
+    randLED();
+}
+</code></pre>
+<h6 id="以前两行控制代码为示例展出，剩余三行根据可根据以上规律复制修改，不做多余阐述。"><a href="#以前两行控制代码为示例展出，剩余三行根据可根据以上规律复制修改，不做多余阐述。" class="headerlink" title="以前两行控制代码为示例展出，剩余三行根据可根据以上规律复制修改，不做多余阐述。"></a>以前两行控制代码为示例展出，剩余三行根据可根据以上规律复制修改，不做多余阐述。</h6><h6 id="已完成实验验证步骤，以上代码可行。"><a href="#已完成实验验证步骤，以上代码可行。" class="headerlink" title="已完成实验验证步骤，以上代码可行。"></a>已完成实验验证步骤，以上代码可行。</h6>
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/1409249540.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/1350336761.mp3'></li>
+                        
+                    
+                        
+                            <li title='2' data-url='http://link.hhtjim.com/163/545825923.mp3'></li>
+                        
+                    
+                        
+                            <li title='3' data-url='http://link.hhtjim.com/163/539619640.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='false'
+        data-ci='c3450cd920580cc7819f'
+        data-cs='111992513f76f2b4471875b1d04d919f59be5009'
+        data-r='https://mitsuha1233.github.io/'
+        data-o='Mitsuha1233'
+        data-a='Mitsuha1233'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#定义变量"><span class="toc-number">1.</span> <span class="toc-text">定义变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#UI界面设计"><span class="toc-number">2.</span> <span class="toc-text">UI界面设计</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#以前两行控制代码为示例展出，剩余三行根据可根据以上规律复制修改，不做多余阐述。"><span class="toc-number">2.0.0.0.1.</span> <span class="toc-text">以前两行控制代码为示例展出，剩余三行根据可根据以上规律复制修改，不做多余阐述。</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#已完成实验验证步骤，以上代码可行。"><span class="toc-number">2.0.0.0.2.</span> <span class="toc-text">已完成实验验证步骤，以上代码可行。</span></a></li></ol></li></ol></li></ol></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
